@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light">
+<title>Đồng Nai Quê Em | Video lịch sử và trợ lý hỏi đáp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#183149;--muted:#617689;--line:#dce6e7;--paper:#f7f9f7;--white:#fff;--teal:#146b69;--dark:#18354d;--mint:#e9f3ed;--orange:#bf8039;--shadow:0 16px 38px rgba(29,53,66,.055)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:'Be Vietnam Pro',system-ui,Arial,sans-serif;background:var(--paper);font-size:15px;line-height:1.65;letter-spacing:-.12px}
+button,input,select,textarea{font:inherit;font-size:14px}button{cursor:pointer;transition:background .18s,border-color .18s,transform .18s}button:disabled{opacity:.55;cursor:not-allowed}
+a{color:var(--teal)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #e0ae65;outline-offset:3px}
+.app{display:grid;grid-template-columns:264px minmax(0,1fr);min-height:100vh}
+.side{background:linear-gradient(180deg,#17384e 0%,#173248 52%,#112e42 100%);color:#e7f9f5;padding:30px 18px 24px;display:flex;flex-direction:column;gap:32px;border-right:1px solid rgba(255,255,255,.07);min-height:100vh}
+.brand{display:flex;gap:12px;align-items:center;padding:0 6px}
+.brandmark{border-radius:14px;background:#f2e1bb;color:#173a50;font-size:30px;width:49px;height:49px;font-weight:900;display:grid;place-items:center;flex:0 0 auto}
+.brand b{display:block;font-size:19px;letter-spacing:-.7px;color:#fff}.brand small{display:block;font-size:10px;font-weight:600;letter-spacing:.4px;color:#bfd4d7;margin-top:3px}
+.side-label{font-size:11px;letter-spacing:1.15px;color:#88afb9;padding:0 12px;margin:0 0 8px;font-weight:700}
+.nav{display:grid;gap:6px}
+.nav button{border:0;text-align:left;background:transparent;color:#d3e4e8;border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;font-weight:500;font-size:13px}
+.nav .nicon{width:23px;font-size:19px;text-align:center}
+.nav button.active,.nav button:hover{background:#285068;color:#fff}
+.sidetip{margin-top:auto;border:1px solid #315a70;border-radius:15px;padding:14px;background:#1b3f56;font-size:11px;color:#bcd6dc}.sidetip strong{color:#fff;display:block;margin-bottom:5px;font-size:12px}
+.main{min-width:0}
+.topbar{height:78px;display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff;border-bottom:1px solid var(--line);padding:0 38px}
+.crumb{font-size:11px;color:var(--muted);letter-spacing:.3px}.topbar h1{font-size:18px;margin:1px 0 0;letter-spacing:-.5px}
+.avatar{width:35px;height:35px;display:grid;place-items:center;border-radius:50%;background:#fcebd2;color:#915d19;font-weight:700;flex:0 0 auto}
+.page{padding:30px 38px 55px;max-width:1470px;margin:0 auto}
+.section{display:none}.section.active{display:block}
+/* Hero */
+.hero{position:relative;overflow:hidden;min-height:260px;padding:35px 40px;border-radius:20px;color:#fff;background:linear-gradient(112deg,#143b4d 0%,#155c64 63%,#287f72 100%);box-shadow:0 22px 40px rgba(25,76,83,.13);display:flex;justify-content:space-between;align-items:center;gap:20px}
+.hero:before,.hero:after{content:'';position:absolute;border:1px solid #ffffff16;border-radius:50%;width:340px;height:340px;right:170px;top:-180px;pointer-events:none}
+.hero:after{width:200px;height:200px;right:30px;top:-75px}
+.hero-content{position:relative;z-index:1;max-width:680px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.7px;color:#f1d9a5}
+.hero h2{font-size:clamp(28px,3vw,41px);line-height:1.28;letter-spacing:-1.4px;margin:15px 0}.hero-accent{color:#f1d6a3}
+.hero p{font-size:14px;max-width:570px;line-height:1.85;color:#e0eef0;margin:0}
+.chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.chip{border:1px solid #ffffff48;background:#ffffff1c;border-radius:40px;padding:6px 12px;font-size:12px;font-weight:600}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.hero-medallion{position:relative;z-index:1;flex:0 0 190px;width:190px;height:190px;border-radius:50%;border:1px solid #ffffff40;background:radial-gradient(circle at 35% 30%,#ffffff26,#ffffff0d);display:grid;place-items:center;text-align:center}
+.hero-medallion span{display:block;font-size:44px;line-height:1;color:#f1d6a3}.hero-medallion strong{display:block;letter-spacing:2px;font-size:15px;margin-top:6px}.hero-medallion small{font-size:12px;color:#cfe3e6}
+.btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 17px;font-weight:700;color:#35555d;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;text-decoration:none}
+.btn.primary{background:var(--teal);color:#fff;border-color:var(--teal)}.btn.primary:hover{background:#0f5755}
+.btn.ghost:hover{background:#f1f7f5}
+.hero .btn.primary{background:#f1d6a3;border-color:#f1d6a3;color:#173a50}.hero .btn.primary:hover{background:#f7e3bd}
+.hero .btn.ghost{background:#ffffff1a;border-color:#ffffff50;color:#fff}.hero .btn.ghost:hover{background:#ffffff30}
+.btn.sm{padding:8px 12px;font-size:12px}
+/* Section headings, cards */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin:32px 0 16px;gap:10px;flex-wrap:wrap}
+.sec-head h3{font-size:21px;letter-spacing:-.6px;margin:0;color:#20394d}.sec-head small{color:var(--muted);font-size:12px}
+.gradegrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.grade-card{background:#fff;min-height:176px;border:1px solid #dbe5e7;border-radius:17px;padding:19px;text-align:left;box-shadow:0 8px 22px #284b4e09;color:var(--ink)}
+.grade-card:hover{transform:translateY(-2px);box-shadow:0 16px 28px #254f5020}
+.grade-card.selected{border:2px solid #22877a;padding:18px;background:linear-gradient(180deg,#fff,#f3faf6)}
+.grade-top{display:flex;justify-content:space-between;align-items:center}
+.gicon{width:49px;height:49px;border-radius:12px;background:#e9f2ef;display:grid;place-items:center;font-size:22px}
+.grade-card .arrow{color:#9bb3b4;font-size:20px}
+.grade-card h4{font-size:25px;letter-spacing:-1px;margin:17px 0 2px}.grade-card p{color:var(--muted);font-size:12px;margin:0}
+.grade-card.soon{background:#fbfcfb}.grade-card.soon .gicon{opacity:.6}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 14px;font-size:16px;letter-spacing:-.4px;color:#20394d}
+.twocol{display:grid;grid-template-columns:1.2fr .8fr;gap:17px;margin-top:18px}
+.statlist{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{padding:14px;border-radius:13px;background:#f3f8f5}.stat strong{font-size:28px;display:block;color:#167d72;line-height:1.2}.stat span{font-size:12px;color:#5f7b78}
+.info{font-size:13px;color:#536d74;line-height:1.8}
+.quick{display:grid;gap:10px}
+.subbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.subbar h2{font-size:22px;margin:0;letter-spacing:-.8px}.subbar p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.field{border:1px solid #d8e6e5;background:#fff;color:var(--ink);border-radius:11px;padding:10px 13px;min-height:42px;width:100%;outline:none}
+.searchbox{width:min(340px,100%)}
+/* Video list */
+.chapter{margin:0 0 30px}
+.chapter-head{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.chapter-num{flex:0 0 auto;width:34px;height:34px;border-radius:10px;background:#e9f2ef;color:#176a5b;display:grid;place-items:center;font-weight:800;font-size:14px}
+.chapter-head h3{margin:0;font-size:18px;letter-spacing:-.5px;color:#20394d}.chapter-head small{color:var(--muted);font-size:12px;margin-left:auto;white-space:nowrap}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.vcard{display:flex;flex-direction:column;text-align:left;padding:0;border:1px solid var(--line);background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 8px 22px #284b4e09;color:var(--ink)}
+.vcard:hover{transform:translateY(-2px);border-color:#7ac7b7;box-shadow:0 14px 26px #254f5022}
+.vthumb{position:relative;aspect-ratio:9/16;background:#dfe9e6;overflow:hidden}
+.vthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.vcard.wide{grid-column:span 2}.vcard.wide .vthumb{aspect-ratio:16/9}
+.vyear{position:absolute;left:8px;top:8px;background:#173a50e6;color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:30px;max-width:calc(100% - 16px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vplay{position:absolute;right:10px;bottom:10px;width:40px;height:40px;border-radius:50%;background:#ffffffe8;color:var(--teal);display:grid;place-items:center;font-size:15px;padding-left:3px;box-shadow:0 4px 14px #0003}
+.vtitle{padding:11px 12px 13px;font-size:13px;font-weight:600;line-height:1.45;letter-spacing:-.1px}
+.empty{text-align:center;color:var(--muted);padding:40px 10px}
+/* Library */
+.data-list{display:grid;gap:13px}
+.doc-row{display:flex;align-items:center;gap:15px;border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff}
+.doc-icon{flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:#e9f2ef;display:grid;place-items:center;font-size:22px}
+.doc-main{flex:1;min-width:0}.doc-main b{display:block;font-size:14px;overflow-wrap:anywhere}.doc-main span{font-size:12px;color:var(--muted)}
+.linklist{display:grid;gap:8px}.linklist a{text-decoration:none;font-size:13px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;overflow-wrap:anywhere}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+.infobadge{display:inline-flex;gap:6px;background:#fff3df;color:#91601e;border-radius:40px;font-size:11px;font-weight:700;padding:6px 11px;margin-bottom:14px}
+/* Chat placeholder */
+.soon-box{text-align:center;padding:60px 20px}.soon-box .big{font-size:46px}.soon-box h3{font-size:20px;margin:10px 0 6px}.soon-box p{color:var(--muted);margin:0}
+/* Chat */
+.chat-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:17px;align-items:start}
+.chatbox{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);min-width:0;display:flex;flex-direction:column;height:min(720px,calc(100vh - 190px));min-height:520px;overflow:hidden}
+.chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line)}
+.grade-pick{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}.grade-pick select{border:1px solid #d8e6e5;border-radius:9px;padding:5px 8px;background:#fff;color:var(--ink)}
+.messages{padding:20px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:12px;background:radial-gradient(circle at top right,#eef8f3 0,transparent 47%),#fff}
+.msg{display:flex;flex-direction:column;gap:6px;max-width:92%}.msg.user{align-self:flex-end;align-items:flex-end}.msg.bot{align-self:flex-start}
+.bubble{padding:12px 15px;border:1px solid #e0ebe6;background:#f3f8f5;border-radius:13px 13px 13px 3px;font-size:14px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.user .bubble{background:var(--teal);border-color:var(--teal);color:#fff;border-radius:13px 13px 3px 13px}
+.bubble.err{background:#fff4ee;border-color:#f0d3bf;color:#7a3b12}
+.msg-actions{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid #cfe3de;background:#fff;color:var(--teal);border-radius:50px;font-size:12px;font-weight:600;padding:6px 12px}.chip:hover{background:var(--mint)}
+.keycard{align-self:stretch;max-width:none;border:1px dashed #b9d4cf;border-radius:14px;background:#fff;padding:18px;line-height:1.7}.keycard h4{margin:0 0 6px;font-size:16px}.keycard ol{margin:8px 0 12px;padding-left:20px;color:#35555d;font-size:13px}
+.typing{display:inline-flex;gap:4px;padding:4px 2px}.typing i{width:7px;height:7px;border-radius:50%;background:#7fa9a3;animation:blink 1s infinite}.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.prompt-list{display:flex;gap:7px;flex-wrap:nowrap;overflow-x:auto;padding:8px 18px 10px;scrollbar-width:thin}
+.prompt{flex:0 0 auto;white-space:nowrap;background:#f5faf8;border:1px solid #dfecea;border-radius:50px;font-size:12px;color:#397b73;padding:7px 12px;text-align:left}.prompt:hover{background:var(--mint)}
+.compose{border-top:1px solid var(--line);padding:12px 15px;background:#fff}
+.compose-row{display:flex;align-items:flex-end;gap:8px}
+.compose textarea{min-height:46px;max-height:110px;resize:vertical;padding:11px 12px;border:1px solid #d7e6e3;border-radius:12px;width:100%;font-size:14px;outline:none}.compose textarea:focus{border-color:var(--teal)}
+.compose .send{min-height:46px;padding:0 20px}
+.compose-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#849997;font-size:11px;margin-top:8px}.btn.stop{padding:6px 11px;font-size:12px;flex:none}
+.chat-side{min-width:0}.chat-side h3{margin:0 0 8px;font-size:16px}.lbl{display:block;font-size:12px;font-weight:700;color:#35555d;margin:12px 0 5px}.chk{display:flex;gap:8px;align-items:center;font-size:13px;margin-top:14px}
+.smodal{background:#fff;border-radius:18px;max-width:460px;width:100%;max-height:calc(100vh - 32px);overflow:auto;padding:22px;box-shadow:0 30px 70px #00000055}.smodal h3{margin:0 0 4px;font-size:19px}
+.srow{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+@media(max-width:1000px){.chat-layout{grid-template-columns:1fr}.chatbox{height:min(640px,calc(100vh - 150px));min-height:460px}}
+@media(max-width:480px){.messages{padding:14px 12px}.msg{max-width:100%}.compose-footer span{display:none}.compose-footer{justify-content:flex-end}.subbar{flex-wrap:wrap}}
+/* Video modal */
+.modal-backdrop{position:fixed;inset:0;background:#0c1f2cc4;display:none;align-items:center;justify-content:center;padding:16px;z-index:200}
+.modal-backdrop.open{display:flex}
+.vmodal{background:#fff;border-radius:18px;max-width:900px;width:100%;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 30px 70px #00000055;display:grid;grid-template-columns:auto minmax(260px,1fr);position:relative}
+.vmodal.landscape{grid-template-columns:1fr;max-width:860px}
+.vstage{background:#000;display:flex;align-items:center;justify-content:center;min-width:0;border-radius:18px 0 0 18px;overflow:hidden}
+.vmodal.landscape .vstage{border-radius:18px 18px 0 0}
+.vstage video{display:block;max-height:80vh;max-width:100%;width:auto;height:auto;background:#000}
+.vmodal:not(.landscape) .vstage video{height:80vh;aspect-ratio:9/16}
+.vmodal.landscape .vstage video{width:100%}
+.vinfo{padding:24px 24px 22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.vchap{font-size:11px;font-weight:800;letter-spacing:1.2px;color:var(--orange);text-transform:uppercase}
+.vinfo h3{margin:0;font-size:20px;line-height:1.35;letter-spacing:-.5px;color:#20394d}
+.vinfo .badge{align-self:flex-start;background:#e9f2ef;color:#176a5b;font-size:12px;font-weight:700;padding:4px 11px;border-radius:30px}
+.vexcerpt{margin:0;font-size:14px;line-height:1.8;color:#3d5565;border-left:3px solid #e0ae65;padding-left:12px}
+.vnav{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.vnext{display:none;width:100%}.vnext.show{display:inline-flex}
+.vclose{position:absolute;right:10px;top:10px;z-index:3;width:38px;height:38px;border-radius:50%;border:0;background:#000000aa;color:#fff;font-size:18px;line-height:1}
+.vclose:hover{background:#000}
+.footer{margin-top:40px;font-size:12px;color:var(--muted);text-align:center}
+.toast{position:fixed;right:24px;bottom:24px;background:#123941;color:#fff;padding:13px 19px;border-radius:12px;box-shadow:0 12px 28px #072e3d55;font-size:13px;max-width:380px;z-index:300;display:none}
+.toast.show{display:block}
+@media(max-width:1120px){.app{grid-template-columns:225px minmax(0,1fr)}.page{padding:25px}.topbar{padding:0 25px}.gradegrid{grid-template-columns:repeat(2,minmax(0,1fr))}.twocol{grid-template-columns:1fr}.hero-medallion{flex-basis:150px;width:150px;height:150px}.hero-medallion span{font-size:34px}}
+@media(max-width:860px){.vmodal{grid-template-columns:1fr}.vstage{border-radius:18px 18px 0 0}.vmodal:not(.landscape) .vstage video{height:auto;max-height:62vh;aspect-ratio:9/16}.vinfo{padding:18px}}
+@media(max-width:760px){body{font-size:14px}.app{grid-template-columns:minmax(0,1fr)}.side{min-width:0;min-height:auto}.side{min-height:auto;padding:12px 15px;gap:12px}.brand b{font-size:16px}.brand small{font-size:9px}.brandmark{width:39px;height:39px;font-size:23px}.nav{display:flex;overflow:auto;gap:5px}.nav button{padding:10px 12px;font-size:12px;white-space:nowrap}.side-label,.sidetip{display:none}.topbar{height:72px;padding:0 17px}.topbar h1{font-size:16px}.page{padding:18px 14px 38px}.hero{min-height:220px;padding:27px 22px}.hero h2{font-size:28px}.hero p{font-size:13px}.hero-medallion{display:none}.statlist{gap:8px}.stat{padding:11px}.stat strong{font-size:24px}.video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.doc-row{flex-wrap:wrap}.doc-row .btn{width:100%}.chapter-head small{display:none}.toast{left:14px;right:14px;max-width:none}}
+@media(max-width:380px){.nav button{font-size:11px;padding:9px}.hero h2{font-size:25px}.gradegrid{gap:10px}.grade-card{padding:14px;min-height:150px}.grade-card.selected{padding:13px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;scroll-behavior:auto!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side"><div class="brand"><div class="brandmark" aria-hidden="true">✦</div><div><b>Đồng Nai Quê Em</b><small>GIÁO DỤC ĐỊA PHƯƠNG • LỚP 8</small></div></div>
+<div><div class="side-label">KHÔNG GIAN HỌC TẬP</div><nav class="nav" id="nav">
+<button class="active" data-page="home"><span class="nicon">⌂</span>Tổng quan</button>
+<button data-page="videos"><span class="nicon">▶</span>Video minh họa</button>
+<button data-page="library"><span class="nicon">▤</span>Kho học liệu</button>
+<button data-page="chat"><span class="nicon">◉</span>Hỏi đáp</button>
+</nav></div>
+<div class="sidetip"><strong>✨ Cách học</strong>Xem 16 video theo 5 chương lịch sử Đồng Nai, đọc tư liệu, rồi hỏi trợ lý khi cần giải thích thêm.</div></aside>
+<main class="main">
+<header class="topbar"><div><div class="crumb">GIÁO DỤC ĐỊA PHƯƠNG / <span id="crumbCurrent">Tổng quan</span></div><h1 id="pageTitle">Không gian học tập quê hương Đồng Nai</h1></div><div class="avatar" aria-hidden="true">ĐN</div></header>
+<div class="page">
+
+<section class="section active" id="page-home">
+<div class="hero"><div class="hero-content"><div class="eyebrow">HỌC TỪ TƯ LIỆU • HIỂU VỀ QUÊ HƯƠNG</div><h2>Khám phá quê hương<br><span class="hero-accent">Đồng Nai</span> qua mỗi bài học</h2><p>Xem video lịch sử Đồng Nai theo từng chương, đọc tư liệu của thầy cô và đặt câu hỏi cho trợ lý hỏi đáp để hiểu bài nhanh hơn.</p>
+<div class="chips"><span class="chip">🎬 16 video lịch sử</span><span class="chip">📚 Tài liệu lớp 8</span><span class="chip">💬 Trợ lý hỏi đáp</span></div>
+<div class="hero-actions"><button class="btn primary" data-go="videos">▶ Xem video</button><button class="btn ghost" data-go="chat">💬 Hỏi trợ lý</button></div></div>
+<div class="hero-medallion" aria-hidden="true"><div><span>✳</span><strong>ĐỒNG NAI</strong><small>Quê hương em</small></div></div></div>
+<div class="sec-head"><h3>Chọn khối lớp của em</h3><small>Hiện đã có nội dung cho lớp 8</small></div>
+<div class="gradegrid" id="gradeCards"></div>
+<div class="twocol"><div class="panel"><h3>📊 Kho học liệu hiện tại</h3><div class="statlist"><div class="stat"><strong id="statVideos">0</strong><span>Video</span></div><div class="stat"><strong id="statDocs">3</strong><span>Tài liệu</span></div><div class="stat"><strong id="statChapters">0</strong><span>Chương</span></div></div><p class="info" style="margin-bottom:0">Nội dung lớp 8: lịch sử Đồng Nai từ buổi mở cõi năm 1698 đến Thành phố Đồng Nai hôm nay.</p></div>
+<div class="panel"><h3>🧭 Bắt đầu nhanh</h3><div class="quick"><button class="btn primary" data-go="videos">▶ Xem video theo chương</button><button class="btn ghost" data-go="library">▤ Mở kho học liệu</button><button class="btn ghost" data-go="chat">💬 Hỏi đáp bài học</button></div></div></div>
+</section>
+
+<section class="section" id="page-videos">
+<div class="subbar"><div><h2>Video minh họa 🎬</h2><p>Lịch sử Đồng Nai lớp 8, chia theo 5 chương</p></div><div class="toolbar"><input class="field searchbox" id="videoSearch" type="search" placeholder="Tìm theo tên hoặc năm…" aria-label="Tìm video theo tên hoặc năm" autocomplete="off"></div></div>
+<div id="videoList"></div>
+</section>
+
+<section class="section" id="page-library">
+<div class="subbar"><div><h2>Kho học liệu 📚</h2><p>Tài liệu giáo dục địa phương lớp 8</p></div></div>
+<div class="panel"><span class="infobadge">📌 Nguồn giáo viên cung cấp</span>
+<div class="data-list">
+<div class="doc-row"><div class="doc-icon">📄</div><div class="doc-main"><b>Lịch sử Đồng Nai (phần thuyết minh video)</b><span>Word (.docx) · 1,8 MB</span></div><a class="btn primary" href="tai-lieu/lich-su-dong-nai.docx" download>⬇ Tải về</a></div>
+<div class="doc-row"><div class="doc-icon">📕</div><div class="doc-main"><b>Tài liệu GDĐP lớp 8 – Đồng Nai (cũ)</b><span>PDF · 68,2 MB</span></div><a class="btn ghost" href="tai-lieu/gddp8-dong-nai-cu.pdf" target="_blank" rel="noopener noreferrer">Mở ↗</a></div>
+<div class="doc-row"><div class="doc-icon">📘</div><div class="doc-main"><b>Tài liệu GDĐP lớp 8 – Bình Phước (cũ)</b><span>PDF · 32,8 MB</span></div><a class="btn ghost" href="tai-lieu/gddp8-binh-phuoc-cu.pdf" target="_blank" rel="noopener noreferrer">Mở ↗</a></div>
+</div></div>
+<div class="panel" style="margin-top:17px"><h3>🔗 Trang tham khảo tài liệu</h3><div class="linklist"><a href="https://truongthcslongphuoc.com.vn/tai-lieu-giao-duc-dia-phuong-thcs-tinh-dong-nai-a6029.html" target="_blank" rel="noopener noreferrer">Trường THCS Long Phước – Danh mục tài liệu GDĐP Đồng Nai lớp 6, 7, 8, 9 ↗</a></div><p class="hint">Đường dẫn tham khảo. Giáo viên cần xác minh quyền sử dụng tài liệu trước khi chia sẻ rộng rãi.</p></div>
+</section>
+
+<section class="section" id="page-chat">
+<div class="subbar"><div><h2>Hỏi đáp cùng trợ lý 💬</h2><p>Hỏi về lịch sử Đồng Nai, trợ lý trả lời dựa trên tài liệu của thầy cô</p></div><button class="btn" id="openSettings" type="button">⚙ Cài đặt AI</button></div>
+<div class="chat-layout">
+<div class="chatbox">
+<div class="chat-head"><b>Trợ lý Giáo dục địa phương</b><label class="grade-pick">Lớp <select id="chatGrade" aria-label="Chọn lớp"><option>6</option><option>7</option><option selected>8</option><option>9</option></select></label></div>
+<div class="messages" id="messages" aria-live="polite"></div>
+<div class="prompt-list" id="prompts"></div>
+<div class="compose"><div class="compose-row"><textarea id="chatInput" rows="2" placeholder="Nhập câu hỏi của em… (Enter để gửi, Shift+Enter xuống dòng)"></textarea><button class="btn primary send" id="chatSend" type="button">Gửi</button></div>
+<div class="compose-footer"><span>Trợ lý AI có thể nhầm, em hãy đối chiếu với video và tài liệu.</span><button class="btn stop" id="ttsStop" type="button">■ Dừng âm thanh</button></div></div>
+</div>
+<aside class="panel chat-side"><h3>🔊 Giọng đọc</h3>
+<label class="lbl" for="ttsVoice">Giọng tiếng Việt</label><select class="field" id="ttsVoice"></select>
+<label class="lbl" for="ttsRate">Tốc độ: <span id="ttsRateVal">0.95</span></label><input type="range" id="ttsRate" min="0.6" max="1.4" step="0.05" value="0.95" style="width:100%">
+<label class="chk"><input type="checkbox" id="ttsAuto"> Tự đọc câu trả lời</label>
+<p class="hint" id="ttsStatus"></p></aside>
+</div>
+</section>
+<div class="modal-backdrop" id="settingsModal" role="dialog" aria-modal="true" aria-label="Cài đặt AI"><div class="smodal">
+<h3>⚙ Cài đặt AI</h3>
+<label class="lbl" for="setKey">Anthropic API key</label><input class="field" id="setKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…">
+<p class="hint" id="setKeyHint"></p>
+<label class="lbl" for="setModel">Model</label><input class="field" id="setModel" type="text" autocomplete="off" spellcheck="false" placeholder="claude-haiku-5-5">
+<p class="hint">Key chỉ được lưu trong trình duyệt này (localStorage), không gửi đi đâu ngoài máy chủ Anthropic. Không dùng trên máy dùng chung.</p>
+<div class="srow"><button class="btn primary" id="setSave" type="button">Lưu</button><button class="btn" id="setClear" type="button">Xóa key</button><button class="btn" id="setClose" type="button">Đóng</button></div>
+</div></div>
+
+<div class="footer">ĐỒNG NAI QUÊ EM · Giáo dục địa phương THCS · Học liệu do giáo viên cung cấp</div>
+</div></main></div>
+
+<div class="modal-backdrop" id="videoModal" role="dialog" aria-modal="true" aria-label="Trình phát video">
+<div class="vmodal" id="vmodal">
+<button class="vclose" id="vClose" type="button" aria-label="Đóng">✕</button>
+<div class="vstage"><video id="vPlayer" controls playsinline preload="metadata"></video></div>
+<div class="vinfo"><div class="vchap" id="vChap"></div><h3 id="vTitle"></h3><span class="badge" id="vYear"></span><p class="vexcerpt" id="vExcerpt"></p>
+<div class="vnav"><button class="btn ghost" id="vPrev" type="button">◀ Trước</button><button class="btn ghost" id="vNext" type="button">Tiếp ▶</button><button class="btn primary vnext" id="vUpNext" type="button"></button></div></div>
+</div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="data/videos.js"></script>
+<script src="data/kien-thuc.js"></script>
+<script src="app.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>
