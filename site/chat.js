@@ -21,12 +21,14 @@ function maskKey(k){return k.length>12?k.slice(0,7)+'…'+k.slice(-4):'•••
 function buildSystem(){
   var vids=VIDEOS.map(function(v){return v.id+' — '+v.year+' — '+v.title}).join('\n');
   return 'Bạn là trợ lý Giáo dục địa phương Đồng Nai dành cho học sinh THCS (lớp 6–9). Luôn trả lời bằng tiếng Việt, ngắn gọn, dễ hiểu, phù hợp lứa tuổi và đúng cấp lớp mà học sinh nêu ở đầu câu hỏi (ví dụ [Học sinh lớp 8]). Chỉ trả lời bằng văn bản thuần: không dùng tiêu đề markdown, không in đậm; có thể dùng các dòng ngắn bắt đầu bằng "•".\n'
-  +'Hãy dựa vào tài liệu trong thẻ <tai_lieu>. Nếu tài liệu không đề cập nội dung được hỏi, hãy nói rõ "Tài liệu chưa đề cập…" rồi có thể bổ sung kiến thức chung, ghi chú rõ đó là kiến thức bổ sung ngoài tài liệu.\n\n'
+  +'Hãy dựa vào tài liệu trong thẻ <tai_lieu>. Nếu tài liệu không đề cập nội dung được hỏi, hãy nói rõ "Tài liệu chưa đề cập…" rồi có thể bổ sung kiến thức chung, ghi chú rõ đó là kiến thức bổ sung ngoài tài liệu.\n'
+  +'Bạn có công cụ web_search: chỉ dùng khi câu hỏi cần thông tin mới/cập nhật hoặc tài liệu không có (ví dụ sự kiện gần đây, số liệu hiện nay). Nếu tài liệu đã đủ trả lời thì KHÔNG tìm kiếm. Khi dùng kết quả tìm kiếm, ghi chú rõ đó là thông tin tra cứu từ web; không chèn đường link hay trích dẫn dài.\n\n'
   +'Danh sách video minh họa (ID — năm — tiêu đề):\n'+vids+'\n\n'
   +'Khi có video liên quan đến câu trả lời, hãy thêm ở cuối câu trả lời các dòng riêng có dạng [[video:ID]] (tối đa 2 dòng, chỉ dùng ID có trong danh sách trên).\n\n'
   +'<tai_lieu>\n'+KNOWLEDGE+'\n</tai_lieu>';
 }
 var SYSTEM=null;
+var WEB_SEARCH={type:'web_search_20250305',name:'web_search',max_uses:3};
 
 /* ---- Hiển thị ---- */
 var box=$('messages');
@@ -90,16 +92,23 @@ function errText(status,body){
 async function ask(question,grade){
   if(!SYSTEM)SYSTEM=buildSystem();
   var msgs=history.slice(-6).concat([{role:'user',content:'[Học sinh lớp '+grade+'] '+question}]);
-  var res;
-  try{
-    res=await fetch(proxy?'api/chat':'https://api.anthropic.com/v1/messages',{method:'POST',
-      headers:proxy?{'content-type':'application/json'}:{'x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
-      body:JSON.stringify({model:getModel(),max_tokens:1500,thinking:{type:'disabled'},system:[{type:'text',text:SYSTEM,cache_control:{type:'ephemeral'}}],messages:msgs})});
-  }catch(e){var n=new Error('Không kết nối được Internet. Em kiểm tra mạng rồi thử lại nhé.');n.shown=true;throw n}
-  var data=null;try{data=await res.json()}catch(e){}
-  if(!res.ok){var n2=new Error(errText(res.status,data));n2.shown=true;throw n2}
-  var text=((data&&data.content)||[]).filter(function(b){return b.type==='text'}).map(function(b){return b.text}).join('');
-  return text;
+  var texts=[];
+  /* Web search là server tool: Claude tự quyết định khi nào cần tra cứu; nếu tra lâu API trả pause_turn thì gọi tiếp. */
+  for(var turn=0;turn<4;turn++){
+    var res;
+    try{
+      res=await fetch(proxy?'api/chat':'https://api.anthropic.com/v1/messages',{method:'POST',
+        headers:proxy?{'content-type':'application/json'}:{'x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
+        body:JSON.stringify({model:getModel(),max_tokens:1500,thinking:{type:'disabled'},tools:[WEB_SEARCH],system:[{type:'text',text:SYSTEM,cache_control:{type:'ephemeral'}}],messages:msgs})});
+    }catch(e){var n=new Error('Không kết nối được Internet. Em kiểm tra mạng rồi thử lại nhé.');n.shown=true;throw n}
+    var data=null;try{data=await res.json()}catch(e){}
+    if(!res.ok){var n2=new Error(errText(res.status,data));n2.shown=true;throw n2}
+    var content=(data&&data.content)||[];
+    texts.push(content.filter(function(b){return b.type==='text'}).map(function(b){return b.text}).join(''));
+    if(data.stop_reason!=='pause_turn')break;
+    msgs=msgs.concat([{role:'assistant',content:content}]);
+  }
+  return texts.join('');
 }
 function parse(raw){
   var ids=[];

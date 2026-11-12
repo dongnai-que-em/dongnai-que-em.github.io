@@ -19,7 +19,8 @@ SITE = os.path.join(ROOT, "site")
 API_URL = "https://api.anthropic.com/v1/messages"
 MAX_BODY = 1_000_000          # giới hạn kích thước request
 MAX_TOKENS_CAP = 2048         # không cho client xin quá mức này
-ALLOWED_FIELDS = {"model", "max_tokens", "system", "messages", "thinking"}
+ALLOWED_FIELDS = {"model", "max_tokens", "system", "messages", "thinking", "tools"}
+WEB_SEARCH_TOOL = {"type": "web_search_20250305", "name": "web_search", "max_uses": 3}
 
 
 def load_key():
@@ -92,6 +93,9 @@ class Handler(SimpleHTTPRequestHandler):
             payload = {k: v for k, v in body.items() if k in ALLOWED_FIELDS}
             payload["max_tokens"] = min(int(payload.get("max_tokens", 1024)), MAX_TOKENS_CAP)
             payload.pop("stream", None)
+            # Chỉ cho phép đúng công cụ web search, không để client tự chèn tool khác.
+            if "tools" in payload:
+                payload["tools"] = [WEB_SEARCH_TOOL]
         except (ValueError, TypeError, json.JSONDecodeError) as e:
             return self._json(400, {"error": {"message": "Request lỗi: %s" % e}})
 
