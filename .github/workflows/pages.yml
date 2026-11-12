@@ -23,6 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      # Demo ngắn hạn: nhúng key vào web tĩnh (ai mở web cũng đọc được key này).
+      # Key lấy từ secret ANTHROPIC_API_KEY nên không nằm trong repo/lịch sử commit.
+      - name: Sinh site/config.js
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: echo "window.DNQE_CONFIG={apiKey:\"${ANTHROPIC_API_KEY}\"};" > site/config.js
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

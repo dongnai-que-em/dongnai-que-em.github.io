@@ -9,3 +9,4 @@ VIDEO NHÚNG LINK/
 # Khóa bí mật - tuyệt đối không commit
 .env
 __pycache__/
+site/config.js

@@ -10,7 +10,9 @@ function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=c
 function lsGet(k){try{return localStorage.getItem(k)||''}catch(e){return''}}
 function lsSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
 function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
-function getKey(){return lsGet(KEY_K)}
+/* Key nhúng lúc deploy (config.js do workflow sinh từ GitHub secret, không nằm trong repo); key người dùng tự nhập thì ưu tiên hơn */
+var EMBEDDED_KEY=(window.DNQE_CONFIG&&window.DNQE_CONFIG.apiKey)||'';
+function getKey(){return lsGet(KEY_K)||EMBEDDED_KEY}
 function hasKey(){return proxy||!!getKey()}
 function getModel(){return lsGet(MODEL_K)||DEFAULT_MODEL}
 function maskKey(k){return k.length>12?k.slice(0,7)+'…'+k.slice(-4):'••••'}
