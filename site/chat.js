@@ -94,7 +94,7 @@ async function ask(question,grade){
   try{
     res=await fetch(proxy?'api/chat':'https://api.anthropic.com/v1/messages',{method:'POST',
       headers:proxy?{'content-type':'application/json'}:{'x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
-      body:JSON.stringify({model:getModel(),max_tokens:1024,system:[{type:'text',text:SYSTEM,cache_control:{type:'ephemeral'}}],messages:msgs})});
+      body:JSON.stringify({model:getModel(),max_tokens:1500,thinking:{type:'disabled'},system:[{type:'text',text:SYSTEM,cache_control:{type:'ephemeral'}}],messages:msgs})});
   }catch(e){var n=new Error('Không kết nối được Internet. Em kiểm tra mạng rồi thử lại nhé.');n.shown=true;throw n}
   var data=null;try{data=await res.json()}catch(e){}
   if(!res.ok){var n2=new Error(errText(res.status,data));n2.shown=true;throw n2}

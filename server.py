@@ -19,7 +19,7 @@ SITE = os.path.join(ROOT, "site")
 API_URL = "https://api.anthropic.com/v1/messages"
 MAX_BODY = 1_000_000          # giới hạn kích thước request
 MAX_TOKENS_CAP = 2048         # không cho client xin quá mức này
-ALLOWED_FIELDS = {"model", "max_tokens", "system", "messages"}
+ALLOWED_FIELDS = {"model", "max_tokens", "system", "messages", "thinking"}
 
 
 def load_key():
