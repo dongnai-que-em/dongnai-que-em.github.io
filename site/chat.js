@@ -4,13 +4,14 @@ var $=function(id){return document.getElementById(id)};
 var VIDEOS=window.VIDEOS||[],KNOWLEDGE=window.KNOWLEDGE||'';
 var KEY_K='dnqe_api_key',MODEL_K='dnqe_model',DEFAULT_MODEL='claude-haiku-5-5';
 var PROMPTS=['Nguyễn Hữu Cảnh vào Đồng Nai năm nào để làm gì?','Phong trào Phú Riềng Đỏ diễn ra thế nào?','Vì sao Chiến khu Đ quan trọng?','Kể về chiến thắng Đồng Xoài 1965'];
-var history=[],busy=false,keyCardShown=false;
+var history=[],busy=false,keyCardShown=false,proxy=false; /* proxy=true: server.py giữ key, trình duyệt không cần key */
 
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
 function lsGet(k){try{return localStorage.getItem(k)||''}catch(e){return''}}
 function lsSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
 function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
 function getKey(){return lsGet(KEY_K)}
+function hasKey(){return proxy||!!getKey()}
 function getModel(){return lsGet(MODEL_K)||DEFAULT_MODEL}
 function maskKey(k){return k.length>12?k.slice(0,7)+'…'+k.slice(-4):'••••'}
 
@@ -52,13 +53,13 @@ function showKeyCard(){
   box.appendChild(c);
 }
 function hideKeyCard(){var c=$('keyCard');if(c)c.remove();keyCardShown=false}
-function refreshKeyCard(){if(getKey())hideKeyCard();else showKeyCard()}
+function refreshKeyCard(){if(hasKey())hideKeyCard();else showKeyCard()}
 
 /* ---- Cài đặt ---- */
 var sm=$('settingsModal');
 function openSettings(){
   var k=getKey();$('setKey').value='';
-  $('setKeyHint').textContent=k?'Key đã lưu: '+maskKey(k)+' (để trống nếu muốn giữ nguyên).':'Chưa có key.';
+  $('setKeyHint').textContent=proxy?'API key do máy chủ giữ kín (file .env), không cần nhập ở đây.':k?'Key đã lưu: '+maskKey(k)+' (để trống nếu muốn giữ nguyên).':'Chưa có key.';
   $('setModel').value=getModel();sm.classList.add('open');$('setKey').focus();
 }
 function closeSettings(){sm.classList.remove('open')}
@@ -89,8 +90,8 @@ async function ask(question,grade){
   var msgs=history.slice(-6).concat([{role:'user',content:'[Học sinh lớp '+grade+'] '+question}]);
   var res;
   try{
-    res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
-      headers:{'x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
+    res=await fetch(proxy?'api/chat':'https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:proxy?{'content-type':'application/json'}:{'x-api-key':getKey(),'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json'},
       body:JSON.stringify({model:getModel(),max_tokens:1024,system:[{type:'text',text:SYSTEM,cache_control:{type:'ephemeral'}}],messages:msgs})});
   }catch(e){var n=new Error('Không kết nối được Internet. Em kiểm tra mạng rồi thử lại nhé.');n.shown=true;throw n}
   var data=null;try{data=await res.json()}catch(e){}
@@ -109,7 +110,7 @@ function setBusy(b){busy=b;sendBtn.disabled=b;sendBtn.textContent=b?'Đang trả
 async function send(text){
   if(busy)return;
   var q=(text!=null?text:input.value).trim();if(!q)return;
-  if(!getKey()){openSettings();return}
+  if(!hasKey()){openSettings();return}
   stopSpeak();
   var typed=input.value;input.value='';
   var um=addMsg('user',q);
@@ -159,4 +160,8 @@ document.addEventListener('pagechange',function(e){
 });
 window.addEventListener('beforeunload',stopSpeak);
 refreshKeyCard();
+/* Dò xem có server.py (proxy giữ key) không; trên GitHub Pages/file:// sẽ lỗi và rơi về nhập key tay */
+fetch('api/status',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(s){
+  if(s&&s.proxy&&s.hasKey){proxy=true;refreshKeyCard()}
+}).catch(function(){});
 })();

@@ -5,3 +5,7 @@ VIDEO NHÚNG LINK/
 /Dong_Nai_6_9_AI_Internet_V4.html
 .DS_Store
 .claude/
+
+# Khóa bí mật - tuyệt đối không commit
+.env
+__pycache__/
