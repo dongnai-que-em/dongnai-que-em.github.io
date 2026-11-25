@@ -10,3 +10,6 @@ VIDEO NHÚNG LINK/
 .env
 __pycache__/
 site/config.js
+
+# File zip nguồn (giải nén rồi chạy scripts/import-sangtao.py)
+*.zip

@@ -1,6 +1,14 @@
 # Đồng Nai Quê Em
 
-Web demo tĩnh (không cần build) cho môn Giáo dục địa phương Đồng Nai: xem 16 video lịch sử lớp 8 theo 5 chương, kho học liệu, và trợ lý AI hỏi đáp (Claude) trả lời dựa trên tài liệu của thầy cô, kèm nút mở video liên quan và đọc thành tiếng.
+Web tĩnh (không cần build) cho môn Giáo dục địa phương Đồng Nai, giao diện claymorphism. Gồm các mục:
+
+- **Lịch sử**: 22 sự kiện theo 6 chương (1698 → 2065), 20 video + tranh minh họa.
+- **Di tích**: 6 di tích tiêu biểu (Văn miếu Trấn Biên, Thành cổ Biên Hòa, …).
+- **Sản vật**: 17 poster sản vật, làng nghề, thổ cẩm, thiên nhiên (lọc theo nhóm).
+- **Văn học**: 15 tác phẩm (truyện dân gian, thơ, văn xuôi, tục ngữ – ca dao).
+- **Đồng Nai trong em**: 5 bản đồ khám phá có mã QR + 8 chủ đề âm nhạc, mĩ thuật.
+- **Xã phường**: tra cứu 95 xã, phường, liên kết Wikipedia.
+- **Hỏi AI**: trợ lý Claude trả lời dựa trên toàn bộ học liệu, có nút mở video liên quan và đọc thành tiếng.
 
 ## Chạy trên máy
 
@@ -8,35 +16,25 @@ Web demo tĩnh (không cần build) cho môn Giáo dục địa phương Đồng
 python3 -m http.server -d site 8000
 ```
 
-Mở http://localhost:8000. Cũng có thể bấm đúp `site/index.html` (chạy được từ file://, nhưng nên dùng server để video tua mượt).
+Mở http://localhost:8000. Có trợ lý AI không cần nhập key: tạo `.env` với `ANTHROPIC_API_KEY=sk-ant-...` rồi chạy `python3 server.py`.
 
-## Đưa lên GitHub Pages
+## Cấu trúc
 
-1. Tạo repo mới trên GitHub, rồi `git init`, `git add .`, `git commit`, `git remote add origin ...`, `git push -u origin main`.
-2. Vào Settings → Pages → Source: chọn **GitHub Actions**.
-3. Workflow `.github/workflows/pages.yml` sẽ tự deploy thư mục `site/` mỗi lần push vào `main` (hoặc chạy tay ở tab Actions).
+- `site/index.html`, `site/style.css`, `site/app.js` (giao diện), `site/chat.js` (trợ lý AI).
+- `site/data/content.js`: dữ liệu các mục (sửa chữ, thêm mục ở đây).
+- `site/data/xa-phuong.js`: 95 xã phường. `site/data/poster-text.js`: chữ trên poster (cho AI). `site/data/kien-thuc.js`: thuyết minh video (cho AI).
+- `site/img/<mục>/` ảnh lớn, `site/img/<mục>/t/` ảnh thu nhỏ; `site/videos/`, `site/thumbs/`.
 
-Lưu ý: có 2 video nặng hơn 50MB nên GitHub sẽ cảnh báo khi push, nhưng vẫn được vì mỗi file dưới 100MB. File gốc (PDF, DOCX, thư mục video gốc, mockup) đã được `.gitignore` bỏ qua.
+## Cập nhật học liệu từ file zip
 
-## Bật trợ lý AI
-
-1. Vào https://console.anthropic.com, tạo API key (dạng `sk-ant-...`).
-2. Trên web, mở trang **Hỏi đáp** → **⚙ Cài đặt AI**, dán key vào, bấm Lưu. Model mặc định `claude-haiku-5-5`, có thể sửa tại đây.
-
-### Cách khuyên dùng: key nằm trong `.env`, không phải nhập tay
-
-Tạo file `.env` (đã được `.gitignore`) ở thư mục gốc, một dòng `ANTHROPIC_API_KEY=sk-ant-...`, rồi chạy:
+Giải nén `sangtaophuong.zip` ra một thư mục rồi chạy:
 
 ```bash
-python3 server.py
+python3 -I scripts/import-sangtao.py /đường/dẫn/sangtaophuong
 ```
 
-Mở http://localhost:8000. `server.py` đọc key từ `.env` và tự gắn vào request tới Anthropic; trình duyệt chỉ gọi `/api/chat` nên không bao giờ thấy key (không nằm trong mã nguồn, localStorage hay mạng). Ô nhập key trong Cài đặt AI sẽ không còn cần thiết. Server chỉ lắng nghe `127.0.0.1`. Bản deploy GitHub Pages là web tĩnh nên không có proxy, vẫn phải nhập key tay như dưới đây (hoặc dựng proxy riêng, ví dụ Cloudflare Worker, để giữ key kín).
+Script đổi tên file sang ASCII, nén ảnh (bằng `sips` của macOS) và copy video mới. Sau đó sửa `site/data/content.js` nếu có mục mới.
 
-### Cách cũ: nhập key trong trình duyệt
+## Deploy
 
-Key chỉ lưu trong trình duyệt (localStorage) của máy đang dùng và gửi thẳng tới Anthropic. **Không dán key vào mã nguồn và không commit key lên GitHub.** Chỉ nên dùng cho demo trên máy của giáo viên.
-
-## Khi đổi video hoặc tài liệu
-
-Chạy lại `scripts/prepare-assets.sh` để sao chép, đổi tên file, tạo ảnh thu nhỏ và trích lại nội dung cho AI, rồi cập nhật `site/data/videos.js` nếu cần.
+Push vào `main` là workflow `.github/workflows/pages.yml` tự deploy thư mục `site/` lên https://dongnai-que-em.github.io/. API key lấy từ secret `ANTHROPIC_API_KEY` và được nhúng vào `site/config.js` lúc deploy (ai mở web cũng đọc được key này, chỉ nên dùng cho demo).

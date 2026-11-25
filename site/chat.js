@@ -3,7 +3,7 @@
 var $=function(id){return document.getElementById(id)};
 var VIDEOS=window.VIDEOS||[],KNOWLEDGE=window.KNOWLEDGE||'';
 var KEY_K='dnqe_api_key',MODEL_K='dnqe_model',DEFAULT_MODEL='claude-haiku-5-5';
-var PROMPTS=['Nguyễn Hữu Cảnh vào Đồng Nai năm nào để làm gì?','Phong trào Phú Riềng Đỏ diễn ra thế nào?','Vì sao Chiến khu Đ quan trọng?','Kể về chiến thắng Đồng Xoài 1965'];
+var PROMPTS=['Nguyễn Hữu Cảnh vào Đồng Nai năm nào để làm gì?','Phong trào Phú Riềng Đỏ diễn ra thế nào?','Bưởi Tân Triều có gì đặc biệt?','Kể tóm tắt Sự tích thác Trị An','Văn miếu Trấn Biên xây năm nào?','Chiến dịch Xuân Lộc 1975 diễn ra ra sao?'];
 var history=[],busy=false,keyCardShown=false,proxy=false; /* proxy=true: server.py giữ key, trình duyệt không cần key */
 
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
@@ -18,13 +18,31 @@ function getModel(){return lsGet(MODEL_K)||DEFAULT_MODEL}
 function maskKey(k){return k.length>12?k.slice(0,7)+'…'+k.slice(-4):'••••'}
 
 /* ---- Prompt hệ thống: phần ổn định (cache) đặt trước, không phụ thuộc lớp ---- */
+function catalog(){
+  var W=window,out=[];
+  function add(title,arr,fn){if(arr&&arr.length)out.push(title+':\n'+arr.map(fn).join('\n'))}
+  add('Dòng thời gian lịch sử (có thể không có video)',W.TIMELINE,function(t){return '• '+t.year+' – '+t.title+': '+t.excerpt});
+  add('Di tích lịch sử',W.RELICS,function(r){return '• '+r.name+' ('+r.place+'): '+r.text});
+  add('Sản vật, làng nghề, thiên nhiên',W.PRODUCTS,function(p){return '• '+p.name+' ('+p.place+'): '+p.text});
+  add('Văn học Đồng Nai',W.LITERATURE,function(l){return '• '+l.name+' – '+l.author+(l.year?', '+l.year:'')+' – '+l.genre+': '+l.text});
+  add('Nghệ thuật quê hương (âm nhạc, mĩ thuật)',W.ARTS,function(a){return '• '+a.name+' ('+a.tag+'): '+a.text});
+  add('Bản đồ khám phá',W.QR_MAPS,function(q){return '• '+q.name+': '+q.text});
+  if(W.WARDS&&W.WARDS.length){
+    var p=W.WARDS.filter(function(w){return w[0]==='p'}).map(function(w){return w[1]}),x=W.WARDS.filter(function(w){return w[0]==='x'}).map(function(w){return w[1]});
+    out.push('Đơn vị hành chính cấp xã của Đồng Nai ('+W.WARDS.length+' đơn vị):\nPhường ('+p.length+'): '+p.join(', ')+'\nXã ('+x.length+'): '+x.join(', '));
+  }
+  var PT=W.POSTER_TEXT;
+  if(PT){out.push('Chữ in trên các poster học liệu (sản vật, văn học, nghệ thuật):\n'+Object.keys(PT).map(function(k){return '['+k+']\n'+PT[k]}).join('\n\n'))}
+  return out.join('\n\n');
+}
 function buildSystem(){
   var vids=VIDEOS.map(function(v){return v.id+' — '+v.year+' — '+v.title}).join('\n');
-  return 'Bạn là trợ lý Giáo dục địa phương Đồng Nai dành cho học sinh THCS (lớp 6–9). Luôn trả lời bằng tiếng Việt, ngắn gọn, dễ hiểu, phù hợp lứa tuổi và đúng cấp lớp mà học sinh nêu ở đầu câu hỏi (ví dụ [Học sinh lớp 8]). Chỉ trả lời bằng văn bản thuần: không dùng tiêu đề markdown, không in đậm; có thể dùng các dòng ngắn bắt đầu bằng "•".\n'
-  +'Hãy dựa vào tài liệu trong thẻ <tai_lieu>. Nếu tài liệu không đề cập nội dung được hỏi, hãy nói rõ "Tài liệu chưa đề cập…" rồi có thể bổ sung kiến thức chung, ghi chú rõ đó là kiến thức bổ sung ngoài tài liệu.\n'
-  +'Bạn có công cụ web_search: chỉ dùng khi câu hỏi cần thông tin mới/cập nhật hoặc tài liệu không có (ví dụ sự kiện gần đây, số liệu hiện nay). Nếu tài liệu đã đủ trả lời thì KHÔNG tìm kiếm. Khi dùng kết quả tìm kiếm, ghi chú rõ đó là thông tin tra cứu từ web; không chèn đường link hay trích dẫn dài.\n\n'
+  return 'Bạn là trợ lý Giáo dục địa phương Đồng Nai dành cho học sinh THCS. Luôn trả lời bằng tiếng Việt, ngắn gọn, dễ hiểu, thân thiện, phù hợp lứa tuổi. Chỉ trả lời bằng văn bản thuần: không dùng tiêu đề markdown, không in đậm; có thể dùng các dòng ngắn bắt đầu bằng "•".\n'
+  +'Hãy dựa vào học liệu trong thẻ <hoc_lieu> và <tai_lieu>. Nếu học liệu không đề cập nội dung được hỏi, hãy nói rõ "Tài liệu chưa đề cập…" rồi có thể bổ sung kiến thức chung, ghi chú rõ đó là kiến thức bổ sung ngoài tài liệu.\n'
+  +'Bạn có công cụ web_search: chỉ dùng khi câu hỏi cần thông tin mới/cập nhật hoặc học liệu không có (ví dụ sự kiện gần đây, số liệu hiện nay). Nếu học liệu đã đủ trả lời thì KHÔNG tìm kiếm. Khi dùng kết quả tìm kiếm, ghi chú rõ đó là thông tin tra cứu từ web; không chèn đường link hay trích dẫn dài.\n\n'
   +'Danh sách video minh họa (ID — năm — tiêu đề):\n'+vids+'\n\n'
   +'Khi có video liên quan đến câu trả lời, hãy thêm ở cuối câu trả lời các dòng riêng có dạng [[video:ID]] (tối đa 2 dòng, chỉ dùng ID có trong danh sách trên).\n\n'
+  +'<hoc_lieu>\n'+catalog()+'\n</hoc_lieu>\n\n'
   +'<tai_lieu>\n'+KNOWLEDGE+'\n</tai_lieu>';
 }
 var SYSTEM=null;
@@ -41,7 +59,7 @@ function videoById(id){for(var i=0;i<VIDEOS.length;i++)if(VIDEOS[i].id===id)retu
 function addBotAnswer(text,ids){
   var m=addMsg('bot',text),act=el('div','msg-actions');
   ids.forEach(function(id){var v=videoById(id);if(!v)return;
-    var b=el('button','chip','▶ Xem video: '+v.title);b.type='button';b.addEventListener('click',function(){window.openVideo(id)});act.appendChild(b)});
+    var b=el('button','chip','▶ '+v.title);b.type='button';b.addEventListener('click',function(){window.openVideo(id)});act.appendChild(b)});
   var l=el('button','chip','🔊 Nghe');l.type='button';l.addEventListener('click',function(){speak(text)});act.appendChild(l);
   m.appendChild(act);scrollEnd();
   if($('ttsAuto').checked)speak(text);
@@ -53,7 +71,7 @@ function showKeyCard(){
   c.appendChild(el('div','','Trợ lý dùng Claude của Anthropic. Thầy cô làm theo các bước sau:'));
   var ol=el('ol');['Vào console.anthropic.com, đăng nhập và tạo một API key (bắt đầu bằng sk-ant-).','Bấm "⚙ Cài đặt AI" bên dưới và dán key vào ô API key.','Bấm Lưu rồi đặt câu hỏi. Key chỉ lưu trong trình duyệt này.'].forEach(function(t){ol.appendChild(el('li','',t))});
   c.appendChild(ol);
-  var b=el('button','btn primary','⚙ Mở Cài đặt AI');b.type='button';b.addEventListener('click',openSettings);c.appendChild(b);
+  var b=el('button','btn coral sm','⚙ Mở Cài đặt AI');b.type='button';b.addEventListener('click',openSettings);c.appendChild(b);
   box.appendChild(c);
 }
 function hideKeyCard(){var c=$('keyCard');if(c)c.remove();keyCardShown=false}
@@ -89,9 +107,9 @@ function errText(status,body){
   if(status===429||status===529||status>=500)return 'AI đang bận, em thử lại sau ít giây nhé.';
   return 'Có lỗi khi hỏi AI (mã '+status+'). '+msg;
 }
-async function ask(question,grade){
+async function ask(question){
   if(!SYSTEM)SYSTEM=buildSystem();
-  var msgs=history.slice(-6).concat([{role:'user',content:'[Học sinh lớp '+grade+'] '+question}]);
+  var msgs=history.slice(-6).concat([{role:'user',content:question}]);
   var texts=[];
   /* Web search là server tool: Claude tự quyết định khi nào cần tra cứu; nếu tra lâu API trả pause_turn thì gọi tiếp. */
   for(var turn=0;turn<4;turn++){
@@ -128,7 +146,7 @@ async function send(text){
   var tm=el('div','msg bot'),tb=el('div','bubble');tb.innerHTML='<span class="typing"><i></i><i></i><i></i></span>';tm.appendChild(tb);box.appendChild(tm);scrollEnd();
   setBusy(true);
   try{
-    var raw=await ask(q,$('chatGrade').value),p=parse(raw);
+    var raw=await ask(q),p=parse(raw);
     tm.remove();history.push({role:'user',content:q},{role:'assistant',content:p.text});
     addBotAnswer(p.text,p.ids);
   }catch(e){
@@ -167,7 +185,7 @@ $('ttsStop').addEventListener('click',stopSpeak);
 
 /* ---- Khởi động ---- */
 document.addEventListener('pagechange',function(e){
-  if(e.detail==='chat'){refreshKeyCard();setTimeout(function(){try{input.focus({preventScroll:true})}catch(_){}},0)}else stopSpeak();
+  if(e.detail==='hoi-dap'){refreshKeyCard();if(!matchMedia('(pointer:coarse)').matches)setTimeout(function(){try{input.focus({preventScroll:true})}catch(_){}},0)}else stopSpeak();
 });
 window.addEventListener('beforeunload',stopSpeak);
 refreshKeyCard();
